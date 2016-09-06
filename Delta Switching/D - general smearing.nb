@@ -1,0 +1,268 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 8.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       157,          7]
+NotebookDataLength[      8535,        259]
+NotebookOptionsPosition[      7699,        224]
+NotebookOutlinePosition[      8043,        239]
+CellTagsIndexPosition[      8000,        236]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["\[Delta] switching - F(x)", "Title",
+ CellChangeTimes->{{3.67812383155888*^9, 3.6781238515000205`*^9}, {
+  3.678191459585705*^9, 3.6781914600069056`*^9}}],
+
+Cell["\<\
+begin with our most general expression for rhodt2 and use a delta switching \
+function to find a less general expression for the |g><g| transition \
+probability\
+\>", "Subtitle",
+ CellChangeTimes->{{3.678123856457304*^9, 3.678123888697148*^9}, {
+  3.6781242033651457`*^9, 3.67812423001567*^9}, {3.6781914645203137`*^9, 
+  3.678191466025917*^9}}],
+
+Cell[CellGroupData[{
+
+Cell["the switching function", "Section",
+ CellChangeTimes->{{3.678123893399417*^9, 3.6781238959455624`*^9}}],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"chiD", "[", "t_", "]"}], ":=", 
+  RowBox[{"DiracDelta", "[", 
+   RowBox[{"t", "-", "t1"}], "]"}]}], "\n", 
+ RowBox[{
+  RowBox[{"chiDtil", "[", "\[CapitalOmega]_", "]"}], ":=", 
+  RowBox[{"FourierTransform", "[", 
+   RowBox[{
+    RowBox[{"chiD", "[", "t", "]"}], ",", "t", ",", "\[CapitalOmega]", ",", 
+    RowBox[{"FourierParameters", "\[Rule]", 
+     RowBox[{"{", 
+      RowBox[{"1", ",", "1"}], "}"}]}]}], "]"}]}]}], "Input",
+ CellChangeTimes->{{3.678123899477764*^9, 3.6781239221690626`*^9}, 
+   3.6781252571604195`*^9, {3.678191455015694*^9, 3.678191476890937*^9}, {
+   3.678191511496402*^9, 3.6781915155428095`*^9}, {3.6781931229218416`*^9, 
+   3.678193137239292*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"chiDtil", "[", "\[CapitalOmega]", "]"}]], "Input",
+ CellChangeTimes->{{3.678192926723572*^9, 3.6781929409544306`*^9}}],
+
+Cell[BoxData[
+ SuperscriptBox["\[ExponentialE]", 
+  RowBox[{"\[ImaginaryI]", " ", "t1", " ", "\[CapitalOmega]"}]]], "Output",
+ CellChangeTimes->{3.678192941643832*^9, 3.678193140715904*^9}]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["the expression for the |g><g| probability", "Section",
+ CellChangeTimes->{{3.6781239331016874`*^9, 3.6781239376179457`*^9}, {
+  3.6781242725911055`*^9, 3.6781242780594177`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  FractionBox["1", 
+   RowBox[{"4", "\[Pi]"}]], "*", 
+  RowBox[{"Integrate", "[", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"\[ExponentialE]", "^", 
+      RowBox[{"(", 
+       RowBox[{
+        RowBox[{"-", "\[CurlyEpsilon]"}], "*", 
+        RowBox[{"Abs", "[", "k", "]"}]}], ")"}]}], "*", 
+     RowBox[{"Abs", "[", "k", "]"}], "*", 
+     RowBox[{
+      RowBox[{"ftil", "[", "k", "]"}], "^", "2"}], "*", 
+     RowBox[{"(", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"(", 
+         RowBox[{"1", "-", "\[Alpha]"}], ")"}], "*", 
+        RowBox[{"chiDtil", "[", 
+         RowBox[{
+          RowBox[{"-", 
+           RowBox[{"Abs", "[", "k", "]"}]}], "-", "\[CapitalOmega]"}], "]"}], 
+        "*", 
+        RowBox[{"chiDtil", "[", 
+         RowBox[{
+          RowBox[{"Abs", "[", "k", "]"}], "+", "\[CapitalOmega]"}], "]"}]}], 
+       "\[IndentingNewLine]", "-", 
+       RowBox[{"2", "*", "\[Alpha]", "*", "\[IndentingNewLine]", 
+        RowBox[{"Integrate", "[", 
+         RowBox[{
+          RowBox[{"chiD", "[", 
+           FractionBox["u", 
+            RowBox[{"\[Sqrt]", "2"}]], "]"}], ",", 
+          RowBox[{"{", 
+           RowBox[{"u", ",", 
+            RowBox[{"-", "\[Infinity]"}], ",", "\[Infinity]"}], "}"}]}], 
+         "]"}], "*", "\[IndentingNewLine]", 
+        RowBox[{"Integrate", "[", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"chiD", "[", 
+            FractionBox["v", 
+             RowBox[{"\[Sqrt]", "2"}]], "]"}], "*", 
+           RowBox[{"Cos", "[", 
+            RowBox[{
+             RowBox[{"Abs", "[", "k", "]"}], "*", "v"}], "]"}], "*", 
+           RowBox[{"Cos", "[", 
+            RowBox[{"\[CapitalOmega]", "*", "v"}], "]"}]}], ",", 
+          RowBox[{"{", 
+           RowBox[{"v", ",", "0", ",", "\[Infinity]"}], "}"}]}], "]"}]}]}], 
+      ")"}]}], "\[IndentingNewLine]", ",", 
+    RowBox[{"{", 
+     RowBox[{"k", ",", 
+      RowBox[{"-", "\[Infinity]"}], ",", "\[Infinity]"}], "}"}]}], 
+   "]"}]}]], "Input",
+ CellChangeTimes->{{3.6781239395450563`*^9, 3.6781240634561434`*^9}, {
+   3.6781243136694546`*^9, 3.678124315173541*^9}, {3.6781249330128794`*^9, 
+   3.6781249501028566`*^9}, {3.6781250011637774`*^9, 
+   3.6781250619002514`*^9}, {3.678125112336136*^9, 3.678125228375773*^9}, 
+   3.6781252717802553`*^9, {3.6781914973765755`*^9, 3.678191508293396*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  FractionBox["1", 
+   RowBox[{"4", " ", "\[Pi]"}]], 
+  RowBox[{"(", 
+   RowBox[{
+    SubsuperscriptBox["\[Integral]", 
+     RowBox[{"-", "\[Infinity]"}], "\[Infinity]"], 
+    RowBox[{
+     RowBox[{"ConditionalExpression", "[", 
+      RowBox[{
+       RowBox[{
+        SuperscriptBox["\[ExponentialE]", 
+         RowBox[{
+          RowBox[{"-", "\[CurlyEpsilon]"}], " ", 
+          RowBox[{"Abs", "[", "k", "]"}]}]], " ", 
+        RowBox[{"Abs", "[", "k", "]"}], " ", 
+        SuperscriptBox[
+         RowBox[{"ftil", "[", "k", "]"}], "2"], " ", 
+        RowBox[{"(", 
+         RowBox[{
+          RowBox[{
+           SuperscriptBox["\[ExponentialE]", 
+            RowBox[{
+             RowBox[{"\[ImaginaryI]", " ", "t1", " ", 
+              RowBox[{"(", 
+               RowBox[{
+                RowBox[{"-", "\[CapitalOmega]"}], "-", 
+                RowBox[{"Abs", "[", "k", "]"}]}], ")"}]}], "+", 
+             RowBox[{"\[ImaginaryI]", " ", "t1", " ", 
+              RowBox[{"(", 
+               RowBox[{"\[CapitalOmega]", "+", 
+                RowBox[{"Abs", "[", "k", "]"}]}], ")"}]}]}]], " ", 
+           RowBox[{"(", 
+            RowBox[{"1", "-", "\[Alpha]"}], ")"}]}], "-", 
+          RowBox[{"4", " ", "\[Alpha]", " ", 
+           RowBox[{"Cos", "[", 
+            RowBox[{
+             SqrtBox["2"], " ", "t1", " ", "\[CapitalOmega]"}], "]"}], " ", 
+           RowBox[{"Cos", "[", 
+            RowBox[{
+             SqrtBox["2"], " ", "t1", " ", 
+             RowBox[{"Abs", "[", "k", "]"}]}], "]"}], " ", 
+           RowBox[{"HeavisideTheta", "[", "t1", "]"}]}]}], ")"}]}], ",", 
+       RowBox[{"t1", "\[Element]", "Reals"}]}], "]"}], 
+     RowBox[{"\[DifferentialD]", "k"}]}]}], ")"}]}]], "Output",
+ CellChangeTimes->{3.6781929079441*^9, 3.67819331102962*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["\<\
+split this k integral up so that we never have an Abs[k] and we\
+\[CloseCurlyQuote]re doing everything correctly\
+\>", "Subsubsection",
+ CellChangeTimes->{{3.6781262573951693`*^9, 3.678126280420215*^9}}],
+
+Cell[BoxData[
+ RowBox[{"gg", ":=", 
+  RowBox[{
+   FractionBox[
+    RowBox[{"1", "-", 
+     RowBox[{"2", "*", "\[Alpha]"}]}], 
+    RowBox[{"2", "\[Pi]"}]], "*", 
+   RowBox[{"Integrate", "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"\[ExponentialE]", "^", 
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{"-", "\[CurlyEpsilon]"}], "*", "k"}], ")"}]}], "*", "k", "*", 
+      SuperscriptBox[
+       RowBox[{"ftil", "[", "k", "]"}], "2"]}], ",", 
+     RowBox[{"{", 
+      RowBox[{"k", ",", "0", ",", "\[Infinity]"}], "}"}]}], 
+    "]"}]}]}]], "Input",
+ CellChangeTimes->{{3.6781269434188004`*^9, 3.6781271796863127`*^9}, {
+  3.6781941567677174`*^9, 3.6781942178500443`*^9}}]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+},
+WindowSize->{707, 761},
+WindowMargins->{{Automatic, -20}, {Automatic, 27}},
+FrontEndVersion->"8.0 for Microsoft Windows (64-bit) (October 6, 2011)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[579, 22, 160, 2, 83, "Title"],
+Cell[742, 26, 355, 7, 105, "Subtitle"],
+Cell[CellGroupData[{
+Cell[1122, 37, 109, 1, 71, "Section"],
+Cell[1234, 40, 709, 16, 52, "Input"],
+Cell[CellGroupData[{
+Cell[1968, 60, 142, 2, 31, "Input"],
+Cell[2113, 64, 189, 3, 32, "Output"]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[2351, 73, 183, 2, 71, "Section"],
+Cell[CellGroupData[{
+Cell[2559, 79, 2372, 61, 244, "Input"],
+Cell[4934, 142, 1794, 46, 114, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[6765, 193, 213, 4, 27, "Subsubsection"],
+Cell[6981, 199, 678, 20, 48, "Input"]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)

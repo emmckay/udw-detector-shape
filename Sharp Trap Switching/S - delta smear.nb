@@ -1,0 +1,473 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 8.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       157,          7]
+NotebookDataLength[     15170,        464]
+NotebookOptionsPosition[     12942,        382]
+NotebookOutlinePosition[     13283,        397]
+CellTagsIndexPosition[     13240,        394]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["S - delta smear", "Title",
+ CellChangeTimes->{{3.679318328942289*^9, 3.679318333195532*^9}, {
+   3.6793268223935575`*^9, 3.679326824084607*^9}, {3.679751397241438*^9, 
+   3.6797513983825035`*^9}, 3.6799250963626976`*^9}],
+
+Cell["\<\
+sharp trap switch, delta smear, calculate <g|\[Rho]|g>, with detector \
+beginning in |g><g|\
+\>", "Subtitle",
+ CellChangeTimes->{{3.679318338282823*^9, 3.6793183696526175`*^9}, {
+  3.6793184725985055`*^9, 3.6793184920586185`*^9}, {3.6797514016346893`*^9, 
+  3.6797514020737143`*^9}, {3.6797515704083424`*^9, 3.6797515781567855`*^9}, {
+  3.6799250984548173`*^9, 3.679925098871841*^9}}],
+
+Cell[CellGroupData[{
+
+Cell["set some parameters", "Section",
+ CellChangeTimes->{{3.679318404520612*^9, 3.6793184064767237`*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"\[Alpha]", "=", "1"}], ";"}]], "Input",
+ CellChangeTimes->{{3.679318442657793*^9, 3.6793184438508615`*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"numSteps", "=", "200"}], ";"}]], "Input",
+ CellChangeTimes->{{3.6793282367957287`*^9, 3.679328240609827*^9}}],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"\[Sigma]Min", "=", "0.1"}], ";", "  ", 
+  RowBox[{"\[Sigma]Max", "=", "2"}], ";", "  ", 
+  RowBox[{"\[Sigma]StepSize", "=", 
+   RowBox[{
+    RowBox[{"Abs", "[", 
+     RowBox[{"\[Sigma]Min", "-", "\[Sigma]Max"}], "]"}], "/", "numSteps"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"\[Sigma]Values", "=", 
+   RowBox[{"Table", "[", 
+    RowBox[{"\[Sigma]", ",", 
+     RowBox[{"{", 
+      RowBox[{
+      "\[Sigma]", ",", "\[Sigma]Min", ",", "\[Sigma]Max", ",", 
+       "\[Sigma]StepSize"}], "}"}]}], "]"}]}], ";"}]}], "Input",
+ CellChangeTimes->{{3.67931705423438*^9, 3.6793170725524273`*^9}, {
+  3.6793219643376102`*^9, 3.6793219648616114`*^9}, {3.6793282218413754`*^9, 
+  3.6793282348546576`*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"clear", "[", "\[Lambda]", "]"}], ";"}]], "Input",
+ CellChangeTimes->{{3.6793948306928716`*^9, 3.6793948339630585`*^9}}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["the smearing function", "Section",
+ CellChangeTimes->{{3.67931840921688*^9, 3.6793184114760094`*^9}}],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"f", "[", "x_", "]"}], ":=", 
+  RowBox[{"DiracDelta", "[", "x", "]"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"ftil", "[", "k_", "]"}], ":=", 
+  RowBox[{"FourierTransform", "[", 
+   RowBox[{
+    RowBox[{"f", "[", "x", "]"}], ",", "x", ",", "k", ",", 
+    RowBox[{"FourierParameters", "\[Rule]", 
+     RowBox[{"{", 
+      RowBox[{"1", ",", 
+       RowBox[{"-", "1"}]}], "}"}]}]}], "]"}], " "}]}], "Input",
+ CellChangeTimes->{{3.6781275509306498`*^9, 3.6781275535106544`*^9}, {
+   3.678127587245116*^9, 3.678127599086339*^9}, {3.6793184161362762`*^9, 
+   3.6793184322651987`*^9}, {3.679318823883598*^9, 3.679318837975404*^9}, 
+   3.6793270132273564`*^9, {3.679751438504798*^9, 3.679751455078746*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"ftil", "[", "k", "]"}]], "Input",
+ CellChangeTimes->{{3.679321776785494*^9, 3.679321779812667*^9}, {
+  3.6797514613811064`*^9, 3.679751461676123*^9}}],
+
+Cell[BoxData["1"], "Output",
+ CellChangeTimes->{3.6797516342499943`*^9, 3.6797516794675803`*^9, 
+  3.6799251802314944`*^9}]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["the k integrand", "Section",
+ CellChangeTimes->{{3.679318456653593*^9, 3.6793184586377068`*^9}}],
+
+Cell["\<\
+this integrand with the transition from Abs[k] \[Rule] k taken into account \
+(i.e. can now properly integrate from 0 to \[Infinity] with proper factor of \
+2) \
+\>", "Item",
+ CellChangeTimes->{{3.67931909683521*^9, 3.6793191411647453`*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"kIntegrand", "[", "k_", "]"}], ":=", 
+  RowBox[{
+   FractionBox[
+    SuperscriptBox["A", "4"], 
+    RowBox[{"2", " ", "\[Pi]", " ", 
+     SuperscriptBox["r", "2"]}]], " ", 
+   SuperscriptBox["\[ExponentialE]", 
+    RowBox[{
+     RowBox[{"-", "k"}], " ", "\[CurlyEpsilon]"}]], " ", "k", " ", 
+   SuperscriptBox[
+    RowBox[{"ftil", "[", "k", "]"}], "2"], " ", 
+   RowBox[{"(", 
+    RowBox[{
+     RowBox[{"-", 
+      FractionBox[
+       RowBox[{"2", " ", 
+        SuperscriptBox[
+         RowBox[{"Sin", "[", 
+          RowBox[{"c", " ", 
+           RowBox[{"(", 
+            RowBox[{
+             RowBox[{"-", "k"}], "+", "\[CapitalOmega]"}], ")"}]}], "]"}], 
+         "2"]}], 
+       SuperscriptBox[
+        RowBox[{"(", 
+         RowBox[{
+          RowBox[{"-", "k"}], "+", "\[CapitalOmega]"}], ")"}], "2"]]}], "-", 
+     FractionBox[
+      RowBox[{"2", " ", 
+       SuperscriptBox[
+        RowBox[{"Sin", "[", 
+         RowBox[{"c", " ", 
+          RowBox[{"(", 
+           RowBox[{"k", "+", "\[CapitalOmega]"}], ")"}]}], "]"}], "2"]}], 
+      SuperscriptBox[
+       RowBox[{"(", 
+        RowBox[{"k", "+", "\[CapitalOmega]"}], ")"}], "2"]]}], 
+    ")"}]}]}]], "Input",
+ CellChangeTimes->{{3.679318709836075*^9, 3.679318750372393*^9}, {
+  3.679318808248704*^9, 3.6793188158161364`*^9}, {3.6793190674265275`*^9, 
+  3.679319078446158*^9}, {3.679751463628235*^9, 3.6797514672894444`*^9}, {
+  3.6799251302286344`*^9, 3.6799251424293327`*^9}}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["the numerical transition probability", "Section",
+ CellChangeTimes->{{3.679318466752171*^9, 3.6793184703113747`*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"c", "=", "1"}], ";", 
+  RowBox[{"r", "=", "0.2"}], ";", 
+  RowBox[{"\[CapitalOmega]", "=", "1"}], ";", 
+  RowBox[{"A", "=", 
+   RowBox[{"1", "/", 
+    RowBox[{"(", 
+     RowBox[{"r", "+", 
+      RowBox[{"2", "*", "c"}]}], ")"}]}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.6793185112577167`*^9, 3.6793185385092754`*^9}, 
+   3.6799251539189897`*^9}],
+
+Cell[CellGroupData[{
+
+Cell["\<\
+with an \[CurlyEpsilon] regularized cutoff (exp)\
+\>", "Subsection",
+ CellChangeTimes->{{3.678127805270733*^9, 3.6781278180723596`*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"\[CurlyEpsilon]", "=", "0.2"}], ";"}]], "Input",
+ CellChangeTimes->{3.679318945148534*^9}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"pexp\[Delta]", "=", 
+   RowBox[{"\[Alpha]", "+", 
+    RowBox[{
+     SuperscriptBox["\[Lambda]", "2"], "*", 
+     RowBox[{"NIntegrate", "[", 
+      RowBox[{
+       RowBox[{"kIntegrand", "[", "k", "]"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"k", ",", "0", ",", "\[Infinity]"}], "}"}]}], "]"}]}]}]}], 
+  ";"}]], "Input",
+ CellChangeTimes->{{3.678127742796611*^9, 3.678127756139035*^9}, 
+   3.6781280582810645`*^9, {3.6792400448092303`*^9, 3.679240044931237*^9}, {
+   3.6793168390450716`*^9, 3.6793168785033283`*^9}, {3.6793170013063526`*^9, 
+   3.67931702277958*^9}, {3.6793170988999343`*^9, 3.6793171145498295`*^9}, {
+   3.6793187976780987`*^9, 3.6793188029343996`*^9}, {3.679326026877232*^9, 
+   3.6793260468172693`*^9}, 3.6793268125833826`*^9, 3.6793948789866343`*^9, {
+   3.679751475687925*^9, 3.679751486689554*^9}, {3.6797515197754464`*^9, 
+   3.6797515451108956`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData["pexp\[Delta]"], "Input",
+ CellChangeTimes->{{3.6797553602665367`*^9, 3.6797553631415586`*^9}}],
+
+Cell[BoxData[
+ RowBox[{"1", "-", 
+  RowBox[{"0.9550769642571518`", " ", 
+   SuperscriptBox["\[Lambda]", "2"]}]}]], "Output",
+ CellChangeTimes->{3.679755363696762*^9, 3.679925188944993*^9}]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["with no cutoff (\[CurlyEpsilon]:=0)", "Subsection",
+ CellChangeTimes->{{3.678127832262022*^9, 3.6781278408692417`*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"\[CurlyEpsilon]", "=", "0"}], ";"}]], "Input",
+ CellChangeTimes->{{3.6793188681611304`*^9, 3.679318873383429*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"pnone\[Delta]", "=", 
+   RowBox[{"\[Alpha]", "+", 
+    RowBox[{
+     SuperscriptBox["\[Lambda]", "2"], "*", 
+     RowBox[{"NIntegrate", "[", 
+      RowBox[{
+       RowBox[{"kIntegrand", "[", "k", "]"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"k", ",", "0", ",", "\[Infinity]"}], "}"}]}], "]"}]}]}]}], 
+  ";"}]], "Input",
+ CellChangeTimes->{{3.678127742796611*^9, 3.678127756139035*^9}, 
+   3.6781280582810645`*^9, {3.6792400448092303`*^9, 3.679240044931237*^9}, {
+   3.6793168390450716`*^9, 3.6793168785033283`*^9}, {3.6793170013063526`*^9, 
+   3.67931702277958*^9}, {3.6793170988999343`*^9, 3.6793171145498295`*^9}, {
+   3.6793187976780987`*^9, 3.6793188029343996`*^9}, {3.679318888836313*^9, 
+   3.679318890049382*^9}, {3.679326023534826*^9, 3.679326041160059*^9}, 
+   3.6793268020882463`*^9, 3.679394881154758*^9, {3.6797514794981427`*^9, 
+   3.6797514833873653`*^9}, {3.679751518652382*^9, 3.679751518876395*^9}, {
+   3.679751549263133*^9, 3.679751552080294*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"NIntegrate", "::", "ncvb"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"NIntegrate failed to converge to prescribed accuracy after \
+\[NoBreak]\\!\\(9\\)\[NoBreak] recursive bisections in \[NoBreak]\\!\\(k\\)\
+\[NoBreak] near \[NoBreak]\\!\\({k}\\)\[NoBreak] = \
+\[NoBreak]\\!\\({4.810366851703783`*^7}\\)\[NoBreak]. NIntegrate obtained \
+\[NoBreak]\\!\\(-5.442058797309736`\\)\[NoBreak] and \
+\[NoBreak]\\!\\(0.6889257175571672`\\)\[NoBreak] for the integral and error \
+estimates. \\!\\(\\*ButtonBox[\\\"\[RightSkeleton]\\\", ButtonStyle->\\\"Link\
+\\\", ButtonFrame->None, ButtonData:>\\\"paclet:ref/message/NIntegrate/ncvb\\\
+\", ButtonNote -> \\\"NIntegrate::ncvb\\\"]\\)\"\>"}]], "Message", "MSG",
+ CellChangeTimes->{3.679768449376462*^9, 3.6799252511835527`*^9}]
+}, Open  ]],
+
+Cell["\<\
+this failed!! I\[CloseCurlyQuote]ll take that to mean, without looking into \
+this further, that we need to have a UV cutoff for a delta smearing to work.\
+\>", "Subsubsection",
+ CellChangeTimes->{{3.6797692668681393`*^9, 3.6797692987210073`*^9}}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["\<\
+with a sharp cutoff (\[CurlyEpsilon]:=0 and integrate only up to a constant)\
+\>", "Subsection",
+ CellChangeTimes->{{3.6781867381346903`*^9, 3.678186758320526*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"\[CurlyEpsilon]", "=", "0"}], ";", "  ", 
+  RowBox[{"cutoff", "=", 
+   RowBox[{"5", "*", "\[CapitalOmega]"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.679318880307825*^9, 3.679318918820028*^9}, {
+  3.6799252021227465`*^9, 3.6799252181776648`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"psharp\[Delta]", "=", 
+  RowBox[{"\[Alpha]", "+", 
+   RowBox[{
+    SuperscriptBox["\[Lambda]", "2"], "*", 
+    RowBox[{"NIntegrate", "[", 
+     RowBox[{
+      RowBox[{"kIntegrand", "[", "k", "]"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"k", ",", "0", ",", "cutoff"}], "}"}]}], "]"}]}]}]}]], "Input",
+ CellChangeTimes->{{3.678127742796611*^9, 3.678127756139035*^9}, 
+   3.6781280582810645`*^9, {3.6792400448092303`*^9, 3.679240044931237*^9}, {
+   3.6793168390450716`*^9, 3.6793168785033283`*^9}, {3.6793170013063526`*^9, 
+   3.67931702277958*^9}, {3.6793170988999343`*^9, 3.6793171145498295`*^9}, {
+   3.6793187976780987`*^9, 3.6793188029343996`*^9}, {3.6793188928855443`*^9, 
+   3.6793189064953227`*^9}, {3.6793260164138117`*^9, 
+   3.6793260174096146`*^9}, {3.6793260504932766`*^9, 3.67932605213328*^9}, 
+   3.679326803138251*^9, 3.6793948825678387`*^9, {3.679751491040803*^9, 
+   3.679751516410254*^9}, {3.67975155532648*^9, 3.679751558580666*^9}, 
+   3.679925211563287*^9}],
+
+Cell[BoxData[
+ RowBox[{"1", "-", 
+  RowBox[{"1.2600944540182055`", " ", 
+   SuperscriptBox["\[Lambda]", "2"]}]}]], "Output",
+ CellChangeTimes->{{3.6799252123293304`*^9, 3.6799252198247595`*^9}}]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["set \[Lambda]", "Subsection",
+ CellChangeTimes->{{3.679931360936206*^9, 3.679931362657305*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"\[Lambda]", "=", "0.1"}], ";"}]], "Input",
+ CellChangeTimes->{{3.6799313644734087`*^9, 3.67993136852064*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData["pexp\[Delta]"], "Input",
+ CellChangeTimes->{{3.6799313730488987`*^9, 3.679931377100131*^9}}],
+
+Cell[BoxData["0.9904492303574285`"], "Output",
+ CellChangeTimes->{3.679931377777169*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"1", "-", 
+  RowBox[{"0.9550769642571518`", " ", 
+   SuperscriptBox["\[Lambda]", "2"]}]}]], "Input"],
+
+Cell[BoxData["0.9904492303574285`"], "Output",
+ CellChangeTimes->{3.679931560185602*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData["psharp\[Delta]"], "Input",
+ CellChangeTimes->{{3.679931380091302*^9, 3.6799313823864326`*^9}}],
+
+Cell[BoxData["0.987399055459818`"], "Output",
+ CellChangeTimes->{3.6799313829534655`*^9}]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+},
+WindowSize->{707, 761},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+FrontEndVersion->"8.0 for Microsoft Windows (64-bit) (October 6, 2011)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[579, 22, 226, 3, 83, "Title"],
+Cell[808, 27, 394, 7, 77, "Subtitle"],
+Cell[CellGroupData[{
+Cell[1227, 38, 106, 1, 71, "Section"],
+Cell[1336, 41, 142, 3, 31, "Input"],
+Cell[1481, 46, 144, 3, 31, "Input"],
+Cell[1628, 51, 745, 19, 52, "Input"],
+Cell[2376, 72, 154, 3, 31, "Input"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[2567, 80, 107, 1, 71, "Section"],
+Cell[2677, 83, 740, 16, 52, "Input"],
+Cell[CellGroupData[{
+Cell[3442, 103, 174, 3, 31, "Input"],
+Cell[3619, 108, 123, 2, 30, "Output"]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[3791, 116, 102, 1, 71, "Section"],
+Cell[3896, 119, 251, 5, 39, "Item"],
+Cell[4150, 126, 1475, 43, 54, "Input"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[5662, 174, 123, 1, 71, "Section"],
+Cell[5788, 177, 382, 11, 31, "Input"],
+Cell[CellGroupData[{
+Cell[6195, 192, 146, 3, 36, "Subsection"],
+Cell[6344, 197, 125, 3, 31, "Input"],
+Cell[6472, 202, 913, 19, 31, "Input"],
+Cell[CellGroupData[{
+Cell[7410, 225, 108, 1, 31, "Input"],
+Cell[7521, 228, 188, 4, 30, "Output"]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[7758, 238, 125, 1, 36, "Subsection"],
+Cell[7886, 241, 149, 3, 31, "Input"],
+Cell[CellGroupData[{
+Cell[8060, 248, 1006, 20, 31, "Input"],
+Cell[9069, 270, 821, 14, 79, "Message"]
+}, Open  ]],
+Cell[9905, 287, 257, 4, 43, "Subsubsection"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[10199, 296, 174, 3, 36, "Subsection"],
+Cell[10376, 301, 282, 6, 31, "Input"],
+Cell[CellGroupData[{
+Cell[10683, 311, 1003, 19, 31, "Input"],
+Cell[11689, 332, 194, 4, 30, "Output"]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[11932, 342, 101, 1, 36, "Subsection"],
+Cell[12036, 345, 144, 3, 31, "Input"],
+Cell[CellGroupData[{
+Cell[12205, 352, 106, 1, 31, "Input"],
+Cell[12314, 355, 88, 1, 30, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[12439, 361, 123, 3, 31, "Input"],
+Cell[12565, 366, 88, 1, 30, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[12690, 372, 108, 1, 31, "Input"],
+Cell[12801, 375, 89, 1, 30, "Output"]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)

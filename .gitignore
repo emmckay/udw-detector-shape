@@ -1,0 +1,7 @@
+#GITIGNORE
+machines_tmp
+nodelist
+slurm.batch
+
+*.log
+*.out
