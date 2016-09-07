@@ -27,6 +27,9 @@ Do[  Print["starting Kernel: ",i," on ",hosts[[i]]];
 \[CapitalOmega] = 1;
 \[CurlyEpsilon] = 10 \[CapitalOmega];
 \[Lambda] = 0.1;
+maxRec = 15;
+precGoal = 20;
+workPrec = 50;
 
 numSteps = 9;
 rMin = 0.2/\[CapitalOmega];  rMax = 2/\[CapitalOmega]; rStepSize = Abs[rMin-rMax]/numSteps;
