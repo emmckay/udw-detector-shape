@@ -39,7 +39,7 @@ TMin = 0.4/\[CapitalOmega];  TMax = 4/\[CapitalOmega]; TStepSize = Abs[TMin-TMax
 TValues = Table[T,{T,TMin,TMax,TStepSize}];
 
 table = ParallelTable[
-	\[Alpha] + \[Lambda]^2 * NIntegrate[ lorentzianCutoff[k,\[CurlyEpsilon]]*kIntegrand[k,T], {k,0,\[Infinity]},
+	\[Alpha] + \[Lambda]^2 * NIntegrate[ CutoffFunctions`lorentzianCutoff[k,\[CurlyEpsilon]]*kIntegrand[k,T], {k,0,\[Infinity]},
 		MaxRecursion->maxRec,
 		PrecisionGoal->precGoal,
 		WorkingPrecision->workPrec],
