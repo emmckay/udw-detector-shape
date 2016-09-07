@@ -3,6 +3,25 @@
 Import["/home/emmckay/udw-detector-shape/Packages/Initialize.m"]
 Import["/home/emmckay/udw-detector-shape/Packages/CutoffFunctions.m"]
 
+(* configuration for starting remote kernels *)
+Needs["SubKernels`RemoteKernels`"]
+
+(* initialize the kernels on all machines defined in the host file *)
+hosts=Import["machines_tmp","List"]
+math = "/opt/apps/software/Mathematica/10.2.0/Executables/WolframKernel" <>
+   " -wstp -linkmode Connect `4` -linkname `2` -subkernel -noinit >&  /dev/null &";
+
+(* on the master node initialize only one kernel less, since one is already running *)
+imin=2;
+imax=Length[hosts];
+idelta=1;
+
+Do[  Print["starting Kernel: ",i," on ",hosts[[i]]];
+     LaunchKernels[RemoteMachine[hosts[[i]], "/usr/bin/ssh " <> $UserName <> "@" <> hosts[[i]] <> " \"" <> math <> "\"", i]];,
+     {i,imin,imax,idelta}
+]
+
+
 (*set parameters*)
 \[Alpha] = 1;
 \[CapitalOmega] = 1;
