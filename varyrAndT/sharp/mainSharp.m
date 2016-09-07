@@ -26,6 +26,7 @@ Do[  Print["starting Kernel: ",i," on ",hosts[[i]]];
 \[Alpha] = 1;
 \[CapitalOmega] = 1;
 \[CurlyEpsilon] = 10 \[CapitalOmega];
+\[Sigma] = 10^(-4)/\[CapitalOmega];
 \[Lambda] = 0.1;
 maxRec = 15;
 precGoal = 20;
