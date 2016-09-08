@@ -54,6 +54,7 @@ kIntegrand[k_,r_,T_]:=-(1/\[Pi])*k*ftil[k]^2*(tInt1[k,r,T]+tInt2[k,r,T]+tInt3[k,
 \[CapitalOmega] = 1;
 \[CurlyEpsilon] = 10 \[CapitalOmega];
 \[Lambda] = 0.1;
+\[Sigma] = 10^(-4)/\[CapitalOmega];
 maxRec = 15;
 precGoal = 20;
 workPrec = 50;
@@ -86,3 +87,6 @@ metaFile = StringJoin[{identifier,"_metadata.csv"}];
 
 Export[metaFile,metaData];
 Export[dataFile,table];
+
+
+
