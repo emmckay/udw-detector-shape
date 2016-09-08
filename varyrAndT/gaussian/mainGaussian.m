@@ -27,6 +27,7 @@ Do[  Print["starting Kernel: ",i," on ",hosts[[i]]];
 \[CapitalOmega] = 1;
 \[CurlyEpsilon] = 10 \[CapitalOmega];
 \[Lambda] = 0.1;
+\[Sigma] = 10^(-4)/\[CapitalOmega];
 maxRec = 15;
 precGoal = 20;
 workPrec = 50;
@@ -49,7 +50,7 @@ table = ParallelTable[
 
 cutoffModel = "Gaussian";
 metaData = {{"alpha","Omega","cutoff scale","coupling","cutoff model"},
-		{\[Alpha], \[CapitalOmega], \[CurlyEpsilon], \[Lambda], cutoffModel}}
+		{\[Alpha], \[CapitalOmega], \[CurlyEpsilon], \[Lambda], cutoffModel}};
 
 date = DateString["ISODateTime"];
 identifier = FileNameJoin[{"/home/emmckay/udw-detector-shape/Plotting/TorchOutput",cutoffModel,date}];

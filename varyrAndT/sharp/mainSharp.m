@@ -78,7 +78,7 @@ table = ParallelTable[
 
 cutoffModel = "Sharp";
 metaData = {{"alpha","Omega","cutoff scale","coupling","cutoff model"},
-		{\[Alpha], \[CapitalOmega], \[CurlyEpsilon], \[Lambda], cutoffModel}}
+		{\[Alpha], \[CapitalOmega], \[CurlyEpsilon], \[Lambda], cutoffModel}};
 
 date = DateString["ISODateTime"];
 identifier = FileNameJoin[{"/home/emmckay/udw-detector-shape/Plotting/TorchOutput",cutoffModel,date}];
