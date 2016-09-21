@@ -69,7 +69,7 @@ workPrec = 50;
 numSteps = 5;
 rMin = 0.2/\[CapitalOmega];  rMax = 2/\[CapitalOmega]; rStepSize = Abs[rMin-rMax]/numSteps;
 rValues = Table[r,{r,rMin,rMax,rStepSize}];
-
+r = 0.5/\[CapitalOmega];
 TMin = 0.4/\[CapitalOmega];  TMax = 4/\[CapitalOmega]; TStepSize = Abs[TMin-TMax]/numSteps;
 TValues = Table[T,{T,TMin,TMax,TStepSize}];
 
