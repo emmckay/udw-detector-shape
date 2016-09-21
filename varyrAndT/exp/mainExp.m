@@ -66,7 +66,7 @@ maxRec = 15;
 precGoal = 20;
 workPrec = 50;
 
-numSteps = 9;
+numSteps = 5;
 rMin = 0.2/\[CapitalOmega];  rMax = 2/\[CapitalOmega]; rStepSize = Abs[rMin-rMax]/numSteps;
 rValues = Table[r,{r,rMin,rMax,rStepSize}];
 
