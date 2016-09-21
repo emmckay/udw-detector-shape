@@ -38,12 +38,19 @@ chiT2[t_,r_,T_]:=1/(r+T)
 chiT3[t_,r_,T_]:=1/(r+T) 1/2*(1+Cos[\[Pi]/r (t-T/2)])
 
 (*all those integrands*)
-tpInt1[t_?NumericQ,k_?NumericQ,r_?NumericQ,T_?NumericQ]:= tpInt1[t,k,r,T]=   NIntegrate[chiT1[tp,r,T]* Cos[k*(t-tp)]*Cos[\[CapitalOmega]*(t-tp)],{tp,-T/2-r,t}, MaxRecursion->maxRec, PrecisionGoal->precGoal, WorkingPrecision->workPrec];
+(*tpInt1[t_?NumericQ,k_?NumericQ,r_?NumericQ,T_?NumericQ]:= tpInt1[t,k,r,T]=   NIntegrate[chiT1[tp,r,T]* Cos[k*(t-tp)]*Cos[\[CapitalOmega]*(t-tp)],{tp,-T/2-r,t}, MaxRecursion->maxRec, PrecisionGoal->precGoal, WorkingPrecision->workPrec];
 tInt1[ k_?NumericQ,r_?NumericQ,T_?NumericQ]:=             tInt1[k,r,T]=    \[Alpha]*NIntegrate[chiT1[t,r,T]*  tpInt1[t,k,r,T],{t,-T/2-r,-T/2},           MaxRecursion->maxRec, PrecisionGoal->precGoal, WorkingPrecision->workPrec];
 tpInt2[t_?NumericQ,k_?NumericQ,r_?NumericQ,T_?NumericQ]:= tpInt2[t,k,r,T]=   NIntegrate[chiT2[tp,r,T]* Cos[k*(t-tp)]*Cos[\[CapitalOmega]*(t-tp)],{tp,-T/2,t},   MaxRecursion->maxRec, PrecisionGoal->precGoal, WorkingPrecision->workPrec];
 tInt2[ k_?NumericQ,r_?NumericQ,T_?NumericQ]:=             tInt2[k,r,T]=    \[Alpha]*NIntegrate[chiT2[t,r,T]*  tpInt2[t,k,r,T],{t,-T/2,T/2},              MaxRecursion->maxRec, PrecisionGoal->precGoal, WorkingPrecision->workPrec];
 tpInt3[t_?NumericQ,k_?NumericQ,r_?NumericQ,T_?NumericQ]:= tpInt3[t,k,r,T]=   NIntegrate[chiT3[tp,r,T]* Cos[k*(t-tp)]*Cos[\[CapitalOmega]*(t-tp)],{tp,T,t},      MaxRecursion->maxRec, PrecisionGoal->precGoal, WorkingPrecision->workPrec];
-tInt3[ k_?NumericQ,r_?NumericQ,T_?NumericQ]:=             tInt3[k,r,T]=    \[Alpha]*NIntegrate[chiT3[t,r,T]*  tpInt3[t,k,r,T],{t,T/2,T/2+r},             MaxRecursion->maxRec, PrecisionGoal->precGoal, WorkingPrecision->workPrec];
+tInt3[ k_?NumericQ,r_?NumericQ,T_?NumericQ]:=             tInt3[k,r,T]=    \[Alpha]*NIntegrate[chiT3[t,r,T]*  tpInt3[t,k,r,T],{t,T/2,T/2+r},             MaxRecursion->maxRec, PrecisionGoal->precGoal, WorkingPrecision->workPrec];*)
+
+tpInt1[t_?NumericQ,k_?NumericQ,r_?NumericQ,T_?NumericQ]:= tpInt1[t,k,r,T]=   NIntegrate[chiT1[tp,r,T]* Cos[k*(t-tp)]*Cos[\[CapitalOmega]*(t-tp)],{tp,-T/2-r,t}];
+tInt1[ k_?NumericQ,r_?NumericQ,T_?NumericQ]:=             tInt1[k,r,T]=    \[Alpha]*NIntegrate[chiT1[t,r,T]*  tpInt1[t,k,r,T],{t,-T/2-r,-T/2}];
+tpInt2[t_?NumericQ,k_?NumericQ,r_?NumericQ,T_?NumericQ]:= tpInt2[t,k,r,T]=   NIntegrate[chiT2[tp,r,T]* Cos[k*(t-tp)]*Cos[\[CapitalOmega]*(t-tp)],{tp,-T/2,t}];
+tInt2[ k_?NumericQ,r_?NumericQ,T_?NumericQ]:=             tInt2[k,r,T]=    \[Alpha]*NIntegrate[chiT2[t,r,T]*  tpInt2[t,k,r,T],{t,-T/2,T/2}];
+tpInt3[t_?NumericQ,k_?NumericQ,r_?NumericQ,T_?NumericQ]:= tpInt3[t,k,r,T]=   NIntegrate[chiT3[tp,r,T]* Cos[k*(t-tp)]*Cos[\[CapitalOmega]*(t-tp)],{tp,T,t}];
+tInt3[ k_?NumericQ,r_?NumericQ,T_?NumericQ]:=             tInt3[k,r,T]=    \[Alpha]*NIntegrate[chiT3[t,r,T]*  tpInt3[t,k,r,T],{t,T/2,T/2+r}];
 
 (*the integrand we really want*)
 kIntegrand[k_,r_,T_]:=-(1/\[Pi])*k*ftil[k]^2*(tInt1[k,r,T]+tInt2[k,r,T]+tInt3[k,r,T])
@@ -66,12 +73,16 @@ rValues = Table[r,{r,rMin,rMax,rStepSize}];
 TMin = 0.4/\[CapitalOmega];  TMax = 4/\[CapitalOmega]; TStepSize = Abs[TMin-TMax]/numSteps;
 TValues = Table[T,{T,TMin,TMax,TStepSize}];
 
-table = ParallelTable[
+(*table = ParallelTable[
 	\[Alpha] + \[Lambda]^2 * NIntegrate[ expCutoff[k,\[CurlyEpsilon]]*kIntegrand[k,r,T], {k,0,\[Infinity]},
 		MaxRecursion->maxRec,
 		PrecisionGoal->precGoal,
 		WorkingPrecision->workPrec],
-	{T,TMin,TMax,TStepSize},{r,rMin,rMax,rStepSize}]
+	{T,TMin,TMax,TStepSize},{r,rMin,rMax,rStepSize}]*)
+
+table = Monitor[ParallelTable[
+	\[Alpha] + \[Lambda]^2 * NIntegrate[ expCutoff[k,\[CurlyEpsilon]]*kIntegrand[k,r,T], {k,0,\[Infinity]}],
+	{T,TMin,TMax,TStepSize}],T];
 
 (*save data*)
 
