@@ -22,35 +22,63 @@ Do[  Print["starting Kernel: ",i," on ",hosts[[i]]];
 ]
 
 
+gaussianCutoff[k_,\[CurlyEpsilon]_]:=E^(-Abs[k]^2/(2 \[CurlyEpsilon]^2));
+lorentzianCutoff[k_,\[CurlyEpsilon]_]:=\[CurlyEpsilon]^2/(Abs[k]^2+\[CurlyEpsilon]^2);
+expCutoff[k_,\[CurlyEpsilon]_]:=E^(-Abs[k]/(2 \[CurlyEpsilon]));
+sharpCutoff[k_,\[CurlyEpsilon]_]:=HeavisideTheta[k+\[CurlyEpsilon],-k+\[CurlyEpsilon]];
+
+
+(*smearing function and fourier transform*)
+f[x_]:=1/(\[Sigma]*\[Sqrt]\[Pi]) E^(-x^2/\[Sigma]^2)
+ftil[k_]:=FourierTransform[f[x],x,k,FourierParameters->{1,-1},Assumptions->\[Sigma]\[Element]Reals&&\[Sigma]>0] 
+
+(*switching function*)
+chiT1[t_,r_,T_]:=1/(r+T) 1/2*(1+Cos[\[Pi]/r (t+T/2)])
+chiT2[t_,r_,T_]:=1/(r+T)
+chiT3[t_,r_,T_]:=1/(r+T) 1/2*(1+Cos[\[Pi]/r (t-T/2)])
+
+(*all those integrands*)
+tpInt1[t_?NumericQ,k_?NumericQ,r_?NumericQ,T_?NumericQ]:= tpInt1[t,k,r,T]=   NIntegrate[chiT1[tp,r,T]* Cos[k*(t-tp)]*Cos[\[CapitalOmega]*(t-tp)],{tp,-T/2-r,t}, MaxRecursion->maxRec, PrecisionGoal->precGoal, WorkingPrecision->workPrec];
+tInt1[ k_?NumericQ,r_?NumericQ,T_?NumericQ]:=             tInt1[k,r,T]=    \[Alpha]*NIntegrate[chiT1[t,r,T]*  tpInt1[t,k,r,T],{t,-T/2-r,-T/2},           MaxRecursion->maxRec, PrecisionGoal->precGoal, WorkingPrecision->workPrec];
+tpInt2[t_?NumericQ,k_?NumericQ,r_?NumericQ,T_?NumericQ]:= tpInt2[t,k,r,T]=   NIntegrate[chiT2[tp,r,T]* Cos[k*(t-tp)]*Cos[\[CapitalOmega]*(t-tp)],{tp,-T/2,t},   MaxRecursion->maxRec, PrecisionGoal->precGoal, WorkingPrecision->workPrec];
+tInt2[ k_?NumericQ,r_?NumericQ,T_?NumericQ]:=             tInt2[k,r,T]=    \[Alpha]*NIntegrate[chiT2[t,r,T]*  tpInt2[t,k,r,T],{t,-T/2,T/2},              MaxRecursion->maxRec, PrecisionGoal->precGoal, WorkingPrecision->workPrec];
+tpInt3[t_?NumericQ,k_?NumericQ,r_?NumericQ,T_?NumericQ]:= tpInt3[t,k,r,T]=   NIntegrate[chiT3[tp,r,T]* Cos[k*(t-tp)]*Cos[\[CapitalOmega]*(t-tp)],{tp,T,t},      MaxRecursion->maxRec, PrecisionGoal->precGoal, WorkingPrecision->workPrec];
+tInt3[ k_?NumericQ,r_?NumericQ,T_?NumericQ]:=             tInt3[k,r,T]=    \[Alpha]*NIntegrate[chiT3[t,r,T]*  tpInt3[t,k,r,T],{t,T/2,T/2+r},             MaxRecursion->maxRec, PrecisionGoal->precGoal, WorkingPrecision->workPrec];
+
+(*the integrand we really want*)
+kIntegrand[k_,r_,T_]:=-(1/\[Pi])*k*ftil[k]^2*(tInt1[k,r,T]+tInt2[k,r,T]+tInt3[k,r,T])
+
+
 (*set parameters*)
 \[Alpha] = 1;
 \[CapitalOmega] = 1;
 \[CurlyEpsilon] = 10 \[CapitalOmega];
 \[Lambda] = 0.1;
 \[Sigma] = 10^(-4)/\[CapitalOmega];
-maxRec = 15;
-precGoal = 20;
-workPrec = 50;
+r = 0.2/\[CapitalOmega];
+maxRec = 12;
+precGoal = 10;
+workPrec = 20;
 
-numSteps = 9;
-rMin = 0.2/\[CapitalOmega];  rMax = 2/\[CapitalOmega]; rStepSize = Abs[rMin-rMax]/numSteps;
-rValues = Table[r,{r,rMin,rMax,rStepSize}];
+numSteps = 5;
+(*rMin = 0.2/\[CapitalOmega];  rMax = 2/\[CapitalOmega]; rStepSize = Abs[rMin-rMax]/numSteps;
+rValues = Table[r,{r,rMin,rMax,rStepSize}];*)
 
-TMin = 0.4/\[CapitalOmega];  TMax = 4/\[CapitalOmega]; TStepSize = Abs[TMin-TMax]/numSteps;
+TMin = 0.01/\[CapitalOmega];  TMax = 2/\[CapitalOmega]; TStepSize = Abs[TMin-TMax]/numSteps;
 TValues = Table[T,{T,TMin,TMax,TStepSize}];
 
-table = ParallelTable[
-	\[Alpha] + \[Lambda]^2 * NIntegrate[ CutoffFunctions`gaussianCutoff[k,\[CurlyEpsilon]]*kIntegrand[k,r,T], {k,0,\[Infinity]},
+table = ParallelTable[Print[T];
+	\[Alpha] + \[Lambda]^2 * NIntegrate[ gaussianCutoff[k,\[CurlyEpsilon]]*kIntegrand[k,r,T], {k,0,\[Infinity]},
 		MaxRecursion->maxRec,
 		PrecisionGoal->precGoal,
 		WorkingPrecision->workPrec],
-	{T,TMin,TMax,TStepSize},{r,rMin,rMax,rStepSize}]
+	{T,TMin,TMax,TStepSize}]
 
 (*save data*)
 
 cutoffModel = "Gaussian";
-metaData = {{"alpha","Omega","cutoff scale","coupling","cutoff model"},
-		{\[Alpha], \[CapitalOmega], \[CurlyEpsilon], \[Lambda], cutoffModel}};
+metaData = {{"alpha","Omega","cutoff scale","coupling","cutoff model","TValues"},
+		{\[Alpha], \[CapitalOmega], \[CurlyEpsilon], \[Lambda], cutoffModel,TValues}};
 
 date = DateString["ISODateTime"];
 identifier = FileNameJoin[{"/home/emmckay/udw-detector-shape/Plotting/TorchOutput",cutoffModel,date}];
