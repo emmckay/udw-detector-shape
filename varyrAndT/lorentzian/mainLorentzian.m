@@ -60,11 +60,11 @@ maxRec = 12;
 precGoal = 10;
 workPrec = 20;
 
-numSteps = 5;
+numSteps = 4;
 (*rMin = 0.2/\[CapitalOmega];  rMax = 2/\[CapitalOmega]; rStepSize = Abs[rMin-rMax]/numSteps;
 rValues = Table[r,{r,rMin,rMax,rStepSize}];*)
 
-TMin = 0.01/\[CapitalOmega];  TMax = 2/\[CapitalOmega]; TStepSize = Abs[TMin-TMax]/numSteps;
+TMin = 0.408/\[CapitalOmega];  TMax = 2/\[CapitalOmega]; TStepSize = Abs[TMin-TMax]/numSteps;
 TValues = Table[T,{T,TMin,TMax,TStepSize}];
 
 table = ParallelTable[Print[T];
